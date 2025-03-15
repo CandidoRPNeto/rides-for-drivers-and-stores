@@ -16,7 +16,6 @@ return new class extends Migration
            $table->uuid('user_id');
            $table->string('logo');
            $table->integer('runs')->default(0);
-           $table->softDeletes();
            $table->timestamps();
            $table->foreign('user_id')->references('id')->on('users');
         });
