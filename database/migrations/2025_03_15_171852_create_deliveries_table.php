@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('deliveries', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->uuid('run_id');
-            $table->uuid('rating_id');
+            $table->uuid('run_id')->nullable();
+            $table->uuid('rating_id')->nullable();
             $table->uuid('destiny_id');
             $table->string('code');
             $table->integer('position')->default(0);
