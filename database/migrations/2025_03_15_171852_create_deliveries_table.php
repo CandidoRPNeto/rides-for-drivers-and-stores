@@ -13,16 +13,21 @@ return new class extends Migration
     {
         Schema::create('deliveries', function (Blueprint $table) {
             $table->uuid('id')->primary();
+            $table->uuid('store_id');
             $table->uuid('run_id')->nullable();
             $table->uuid('rating_id')->nullable();
-            $table->uuid('destiny_id');
+            $table->uuid('location_id');
+            $table->string('name');
+            $table->string('phone');
             $table->string('code');
             $table->integer('position')->default(0);
+            $table->integer('status')->default(1);
             $table->timestamp('finished_at')->nullable();
             $table->timestamps();
+            $table->softDeletes();
             $table->foreign('run_id')->references('id')->on('runs');
             $table->foreign('rating_id')->references('id')->on('ratings');
-            $table->foreign('destiny_id')->references('id')->on('locations');
+            $table->foreign('location_id')->references('id')->on('locations');
         });
     }
 

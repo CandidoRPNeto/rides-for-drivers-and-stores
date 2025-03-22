@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('stores', function (Blueprint $table) {
            $table->uuid('id')->primary();
            $table->uuid('user_id');
-           $table->string('logo');
            $table->integer('runs')->default(0);
+           $table->string('cnpj');
            $table->timestamps();
            $table->foreign('user_id')->references('id')->on('users');
         });

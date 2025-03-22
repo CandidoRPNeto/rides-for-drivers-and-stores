@@ -16,8 +16,8 @@ class Store extends Model
 
     protected $fillable = [
         'user_id',
-        'logo',
-        'runs'
+        'runs',
+        'cnpj'
     ];
 
     public function user(): BelongsTo
@@ -30,7 +30,7 @@ class Store extends Model
         return $this->hasMany(Run::class);
     }
 
-    public function roles(): BelongsToMany
+    public function dealers(): BelongsToMany
     {
         return $this->belongsToMany(Dealer::class, 'dealer_store');
     }

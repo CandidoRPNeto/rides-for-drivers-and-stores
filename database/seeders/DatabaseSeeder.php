@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Dealer;
+use App\Models\Store;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -16,9 +17,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         if (App::environment('local')) {
-            $this->call(DealerSeeder::class);
-            $this->call(DeliverySeeder::class);
-            $this->call(StoreSeeder::class);
+            $this->call(StoreExampleSeeder::class);
         }
     }
 }

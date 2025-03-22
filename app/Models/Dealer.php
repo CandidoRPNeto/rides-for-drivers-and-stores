@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\DealerStoreScope;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -16,6 +17,7 @@ class Dealer extends Model
 
     protected $fillable = [
         'user_id',
+        'status'
     ];
 
     public function user(): BelongsTo
@@ -28,8 +30,13 @@ class Dealer extends Model
         return $this->hasMany(Run::class);
     }
 
-    public function roles(): BelongsToMany
+    public function stores(): BelongsToMany
     {
         return $this->belongsToMany(Store::class, 'dealer_store');
     }
+
+    protected static function boot(){
+        parent::boot();
+        static::addGlobalScope(new DealerStoreScope);
+     }
 }

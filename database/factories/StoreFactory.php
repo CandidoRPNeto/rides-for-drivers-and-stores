@@ -20,8 +20,8 @@ class StoreFactory extends Factory
         $user = User::factory()->create();
         return [
             'user_id' => $user->id,
-            'logo' => 'www.test.com',
-            'runs' => 10
+            'runs' => 10,
+            'cnpj' => '123234352524245253'
         ];
     }
 }
