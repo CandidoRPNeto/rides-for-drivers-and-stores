@@ -5,6 +5,7 @@ namespace App\Filament\Stores\Resources;
 use App\Filament\Stores\Resources\DealerResource\Pages;
 use App\Filament\Stores\Resources\DealerResource\RelationManagers;
 use App\Models\Dealer;
+use App\Models\Scopes\DealerStoreScope;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -69,16 +70,21 @@ class DealerResource extends Resource
             ])
             ->paginated([5, 10, 20, 50])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make()
+                ->icon('gmdi-person-remove-s')
+                ->label('Desconectar')
+                ->action(fn ($record) => static::removeDealer([$record])),
                 ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
+                Tables\Actions\DeleteBulkAction::make()
+                ->icon('gmdi-person-remove-s')
+                ->label('Desconectar')
+                ->action(fn ($records) => static::removeDealer($records))
             ])
             ->headerActions([
                 Tables\Actions\Action::make('dealer')
                     ->label('Convidar Entregador')
+                    ->icon('gmdi-person-add-s')
                     ->color('primary')
                     ->modalHeading('Selecionar Entregadores')
                     ->modalButton('Enviar Convite')
@@ -102,10 +108,26 @@ class DealerResource extends Resource
         ];
     }
 
-    private static function sendInvite()
+    private static function removeDealer($dealers)
     {
+        $storeId = auth()->user()->store->id;
+        foreach ($dealers as $dealer) {
+            $runs = $dealer->runs()->where(['store_id' => $storeId,'status'=> 1])->get();
+            foreach ($runs as $run) {
+                $run->deliveries()->where('status', 2)->update(['status' => 1]);
+                $run->delete();
+            }
+            $dealer->stores()->detach($storeId);
+        }
         return ;
     }
+
+    private static function sendInvite()
+    {
+        dd('sw');
+        return ;
+    }
+
     public static function getDealerListForm(): array
     {
         return [
@@ -114,12 +136,13 @@ class DealerResource extends Resource
                 ->searchable()
                 ->multiple()
                 ->options(
-                    Dealer::whereHas('user')
-                        ->with('user')
-                        ->get()
-                        ->mapWithKeys(fn ($dealer) => [
-                            $dealer->id => $dealer->user->name,
-                        ])
+                    Dealer::withoutGlobalScope(DealerStoreScope::class)
+                    ->whereHas('user')
+                    ->with('user')
+                    ->get()
+                    ->mapWithKeys(fn ($dealer) => [
+                        $dealer->id => $dealer->user->name,
+                    ])
                 )
                 ->columns(2),
         ];

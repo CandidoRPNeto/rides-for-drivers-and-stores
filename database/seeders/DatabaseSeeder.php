@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
     {
         if (App::environment('local')) {
             $this->call(StoreExampleSeeder::class);
+            Dealer::factory()->count(3)->create();
         }
     }
 }

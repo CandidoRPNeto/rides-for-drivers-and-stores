@@ -31,8 +31,9 @@ class StorePanelProvider extends PanelProvider
             ->registration(RegisterStoreForm::class)
             ->login(LoginStoreForm::class)
             ->colors([
-                'primary' => Color::Amber,
+                'primary' => Color::hex('#26D07C'),
             ])
+            ->font('Poppins')
             ->discoverResources(in: app_path('Filament/Stores/Resources'), for: 'App\\Filament\\Stores\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Stores\\Pages')
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Stores\\Widgets')

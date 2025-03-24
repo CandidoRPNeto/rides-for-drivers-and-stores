@@ -25,7 +25,7 @@ class Dealer extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function run(): HasMany
+    public function runs(): HasMany
     {
         return $this->hasMany(Run::class);
     }

@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Str;
 
 class Delivery extends Model
 {
@@ -48,5 +49,11 @@ class Delivery extends Model
     {
         parent::boot();
         static::addGlobalScope(new StoreScope);
+        static::creating(function ($model) {
+            if (auth()->check()) {
+                $model->store_id = auth()->user()->store->id;
+            }
+            $model->code = Str::upper(Str::random(6));
+        });
     }
 }

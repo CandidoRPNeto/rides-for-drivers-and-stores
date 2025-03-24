@@ -27,11 +27,6 @@ class DeliveryResource extends Resource
 
     protected static ?string $label = 'Pedido';
 
-    public static function canCreate(): bool
-    {
-        return false;
-    }
-
     public static function form(Form $form): Form
     {
         return $form
@@ -46,7 +41,7 @@ class DeliveryResource extends Resource
                         TextInput::make('phone')
                         ->label('Contato')
                         ->columnSpan(1)
-                        ->numeric()
+                        ->dehydrateStateUsing(fn ($state) => preg_replace('/\D/', '', $state))
                         ->mask('(99) 99999-9999'),
                         Select::make('status')
                             ->label('Status')
@@ -57,6 +52,7 @@ class DeliveryResource extends Resource
                                 4 => 'Entregue',
                                 5 => 'Cancelado'
                             ])
+                            ->hidden(fn ($livewire) => $livewire instanceof \Filament\Resources\Pages\CreateRecord)
                             ->columnSpan(2),
                     ])
                 ]),
@@ -64,6 +60,7 @@ class DeliveryResource extends Resource
                 ->relationship('location')
                 ->schema([
                     Forms\Components\TextInput::make('address')->label('Endereço'),
+                    Forms\Components\TextInput::make('reference')->label('Referencia'),
                 ]),
                 Forms\Components\Section::make('Avaliação')
                 ->relationship('rating')
@@ -175,6 +172,7 @@ class DeliveryResource extends Resource
     {
         return [
             'index' => Pages\ListDeliveries::route('/'),
+            'create' => Pages\CreateDelivery::route('/create'),
         ];
     }
 

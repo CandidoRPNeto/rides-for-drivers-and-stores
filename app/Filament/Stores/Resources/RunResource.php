@@ -25,11 +25,6 @@ class RunResource extends Resource
 
     protected static ?string $label = 'Entrega';
 
-    public static function canCreate(): bool
-    {
-        return false;
-    }
-
     public static function form(Form $form): Form
     {
         return $form
@@ -100,7 +95,8 @@ class RunResource extends Resource
                 ->default(1),
             ])
             ->actions([
-                Tables\Actions\DeleteAction::make()
+                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -120,6 +116,7 @@ class RunResource extends Resource
     {
         return [
             'index' => Pages\ListRuns::route('/'),
+            'create' => Pages\CreateRun::route('/create'),
         ];
     }
 }

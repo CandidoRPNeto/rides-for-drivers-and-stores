@@ -37,7 +37,7 @@ class RestartCacheCommand extends Command
         $this->call('optimize');
 
         if ($this->option('restartdb')) {
-            $this->call('migrate:fresh --seed');
+            $this->call('migrate:fresh', ['--seed' => true]);
         }
     }
 }
