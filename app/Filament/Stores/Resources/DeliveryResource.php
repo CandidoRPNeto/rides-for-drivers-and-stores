@@ -123,6 +123,7 @@ class DeliveryResource extends Resource
                     'Cancelado' => 'gray'
                 }),
             ])
+            ->paginated([5, 10, 20, 50])
             ->filters([
                 \Filament\Tables\Filters\SelectFilter::make('status')
                 ->label('Status')

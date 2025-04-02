@@ -37,10 +37,12 @@ class RunResource extends Resource
                 ->relationship(
                     name: 'dealer',
                     titleAttribute: 'users.name',
-                    modifyQueryUsing: fn (Builder $query, $livewire) =>
-                    $livewire->record
-                        ? $query->join('users', 'dealers.user_id', '=', 'users.id')
-                        : $query->join('users', 'dealers.user_id', '=', 'users.id')->where('status', 1)
+                    modifyQueryUsing: function (Builder $query) {
+                        if (request()->routeIs('filament.pages.list-runs')) {
+                            return $query->join('users', 'dealers.user_id', '=', 'users.id')->where('status', 1);
+                        }
+                        return $query->join('users', 'dealers.user_id', '=', 'users.id');
+                    }
                 ),
                 Select::make('deliveries')
                 ->columnSpan(2)
@@ -51,7 +53,12 @@ class RunResource extends Resource
                 ->relationship(
                     name: 'deliveries',
                     titleAttribute: 'name',
-                    modifyQueryUsing: fn (Builder $query, $livewire) => $livewire->record ? $query : $query->where('status', 1)
+                    modifyQueryUsing: function (Builder $query) {
+                        if (request()->routeIs('filament.pages.list-runs')) {
+                            return $query->where('status', 1);
+                        }
+                        return $query;
+                    }
                 )
                 ->preload(),
             ]);
@@ -84,6 +91,7 @@ class RunResource extends Resource
                     default => Carbon::parse($record->started_at)->diff(Carbon::parse($record->finished_at))->format('%H:%I')
                 }),
             ])
+            ->paginated([5, 10, 20, 50])
             ->filters([
                 \Filament\Tables\Filters\SelectFilter::make('status')
                 ->label('Status')
@@ -96,7 +104,7 @@ class RunResource extends Resource
             ])
             ->actions([
                 Tables\Actions\DeleteAction::make(),
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

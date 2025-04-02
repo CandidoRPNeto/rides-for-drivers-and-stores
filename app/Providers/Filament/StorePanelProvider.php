@@ -41,6 +41,7 @@ class StorePanelProvider extends PanelProvider
                 \App\Filament\Stores\Pages\StoreSettings::class,
                 \App\Filament\Stores\Pages\PurchasePage::class,
             ])
+            ->brandName('Janus')
             ->widgets([
                 Widgets\AccountWidget::class,
                 Widgets\FilamentInfoWidget::class,
